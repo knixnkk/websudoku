@@ -20,9 +20,8 @@ def possible(x, y, n):
                 return False    
     return True
 
-def Print(matrix):
-    for i in range(9):
-        print(matrix[i])
+def sPrint(matrix):
+    print(matrix)
     final = []
     str_fin = []
     for i in range(9):
@@ -32,22 +31,14 @@ def Print(matrix):
         for num in lists:
             str_fin.append(str(num))
     counter = []
-
-    for num in str_fin:
-        pg.press(num)
-        pg.hotkey('right')
-        counter.append(num)
-        if len(counter)%9 == 0:
-            pg.hotkey('down')
-            pg.hotkey('left')
-            pg.hotkey('left')
-            pg.hotkey('left')
-            pg.hotkey('left')
-            pg.hotkey('left')
-            pg.hotkey('left')
-            pg.hotkey('left')
-            pg.hotkey('left')
-            pg.hotkey('left')
+    c1 = 0
+    s2 = 0
+    for i in matrix:
+        s2 = 0
+        for j in i:
+            driver.execute_script(f"document.getElementById('f{s2}{c1}').value = '{j}'")
+            s2 += 1
+        c1 += 1
 
 def solve():
     global grid
@@ -60,14 +51,7 @@ def solve():
                         solve()
                         grid[y][x] = 0
                 return
-    Print(grid)
-
-driver = webdriver.Firefox()
-url = "https://four.websudoku.com/?level=4"
-driver.get(url)
-grid = []
-row08 = ""
-
+    sPrint(grid)
 def calc(xin):
     row = ""
     for i in range(9):
@@ -85,19 +69,28 @@ def insertList(inta):
         ints.append(int(i))
     grid.append(ints)
 
+driver = webdriver.Edge()
+url = "https://four.websudoku.com/?level=4"
+driver.get(url)
 
+while True:
+    grid = []
+    row08 = ""
 
-insertList(calc("00"))
-insertList(calc("01"))
-insertList(calc("02"))
-insertList(calc("03"))
-insertList(calc("04"))
-insertList(calc("05"))
-insertList(calc("06"))
-insertList(calc("07"))
-insertList(calc("08"))
+    insertList(calc("00"))
+    insertList(calc("01"))
+    insertList(calc("02"))
+    insertList(calc("03"))
+    insertList(calc("04"))
+    insertList(calc("05"))
+    insertList(calc("06"))
+    insertList(calc("07"))
+    insertList(calc("08"))
 
-print("AutoPlay in 5sec")
-time.sleep(5)
-solve()
-pg.hotkey("Enter")
+    print("AutoPlay in 5secs")
+    time.sleep(5)
+    solve()
+    pg.hotkey("Enter")
+    time.sleep(5)
+    new_puz = driver.find_element(By.XPATH, '//*[@id="right-column"]/table/tbody/tr[2]/td/form/p[3]/input').click()
+    time.sleep(5)
